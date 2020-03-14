@@ -1,0 +1,13 @@
+=== IDEAS ===
+
+
+Vignette
+
+Chromatic Aberation
+
+Ori title screen distortion text
+
+Noise patterns
+
+Switch to Godot shader setup
+

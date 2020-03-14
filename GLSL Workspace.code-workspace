@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"glsl-canvas.textures": {
+			"0": "textures/cat.png",
+			"1": "textures/sylveon.png"
+		},
+		"glsl-canvas.uniforms": {
+			"u_tex0_size": [350, 350]
+		},
+		"glsl-canvas.useFormatter": true,
+		"glsl-canvas.useCompactFormatter": false
+	}
+}
