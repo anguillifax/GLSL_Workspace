@@ -13,6 +13,10 @@ Usage
 
 */
 
+#ifndef TWO_PI
+#define TWO_PI 6.283185307179586
+#endif
+
 float k_SmoothDist = 2.0;
 
 // region Shapes

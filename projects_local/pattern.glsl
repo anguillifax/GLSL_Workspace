@@ -9,6 +9,7 @@ uniform float u_time;
 #define PI_TWO 1.570796326794897
 #define PI 3.141592653589793
 #define TWO_PI 6.283185307179586
+#define PI2 TWO_PI
 
 vec2 st;
 vec2 uv;
@@ -17,8 +18,10 @@ vec2 uv;
 #include "lib/math.glsl"
 #include "lib/shapes.glsl"
 #include "lib/repeat.glsl"
+#include "lib/matrix.glsl"
+#include "lib/distort.glsl"
 
-#line 22
+#line 24
 
 void tesselate(vec2 size, bool alternate, vec2 offset) {
     vec2 pos = gl_FragCoord.xy - offset;
@@ -54,34 +57,41 @@ void pasta() {
 
 }
 
+vec2 _transformSize;
 vec2 transformPos(vec2 v) {
-    return v * mat2(1.0, 0.5 * sin(u_time * 2.0), 0.0, 1.0);
+    return (v - 0.5 * _transformSize) * mat2_Rotate(u_time - length(gl_FragCoord.xy / u_resolution)) + 0.5 * _transformSize;
 }
 
 void main() {
+
+    float d = 0.0;
+    setupDistort(d);
 
     vec3 color = BLACK;
     vec2 size;
     vec2 pos;
     float repeat_out;
 
-    // size = vec2(70.0);
-    // pos = gl_FragCoord.xy - vec2(u_time * 100.0 / 8.0);
-    // pos = gl_FragCoord.xy;
+    size = vec2(40.0);
 
-    // REPEAT_BOX(size, pos, line_Circle(vec2(0.3) * size, 30.0, 20.0))
-    // color = mix(color, ORANGE, 0.3 * repeat_out);
+    // if (mod(gl_FragCoord.y, 2.0 * size.y) < size.y) {
+    //     pos = gl_FragCoord.xy - vec2(0.5 * size.x, 0.0);
+    // } else {
+    //     pos = gl_FragCoord.xy;
+    // }
 
-    size = vec2(40.0, 80.0);
-    pos = gl_FragCoord.xy;
 
-    float t = u_time * TWO_PI / 3.0;
-    // vec2 cpos = 30.0 * vec2(cos(t), sin(t)) + 0.5 * size;
-    vec2 cpos = 0.5 * size;
+    // if (any(lessThan(pos, vec2(1.0)))) {
+    //     color = DIMGREY;
+    // }
 
-    REPEAT_BOX_T(size, pos, vec2(u_time * 0.0), 2, 2, transformPos,
-        shape_Circle(cpos, 30.0 + 2.0 * sin(u_time * TWO_PI / 1.3)) - shape_Circle(cpos, 8.0))
+
+    _transformSize = size;
+    REPEAT_BOX_T(size, st, 1, 1, transformPos,
+        line_Round(0.1 * size, 0.9 * size, 8.0))
     color = mix(color, ORANGE, repeat_out);
+    
+    color = mix(color, ORANGE, d);
 
     gl_FragColor = vec4(color, 1.0);
 
